@@ -1,0 +1,18 @@
+parameters:
+#
+services:
+services:
+    akuma_social.twig.functions:
+            class: Akuma\Bundle\SocialBundle\Twig\Functions
+            arguments: []
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: twig.extension }
+    akuma_social.twig.filters:
+            class: Akuma\Bundle\SocialBundle\Twig\Filters
+            arguments: []
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: twig.extension }

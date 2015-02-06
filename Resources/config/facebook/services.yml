@@ -1,0 +1,34 @@
+services:
+#    akuma_social.facebook.example:
+#        class: Akuma\Bundle\SocialBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+parameters:
+    akuma_social.facebook.api.class: Akuma\Bundle\SocialBundle\Api\FacebookApi
+    akuma_social.facebook.auth.class: Akuma\Bundle\SocialBundle\Security\Authentication\Provider\FacebookAuthenticationProvider
+    akuma_social.facebook.security.authentication.listener.class: Akuma\Bundle\SocialBundle\Security\Firewall\FacebookAuthenticationListener
+    akuma_social.facebook.security.authentication.entry_point.class: Akuma\Bundle\UserBundle\Security\Authentication\EntryPoint\FacebookEntryPoint
+
+services:
+    akuma_social.facebook.api:
+        public: true
+        parent: akuma_social.abstract.api
+        class: %akuma_social.facebook.api.class%
+
+    akuma_social.facebook.auth:
+        public: false
+        parent: akuma_social.abstract.auth
+        class: %akuma_social.facebook.auth.class%
+
+    akuma_social.facebook.security.authentication.listener:
+        abstract: true
+        parent: akuma_social.abstract.security.authentication.listener
+        class: %akuma_social.facebook.security.authentication.listener.class%
+
+    akuma_social.facebook.security.authentication.entry_point:
+        public: false
+        abstract: true
+        class: %akuma_social.facebook.security.authentication.entry_point.class%
+        arguments: []
+        calls:
+            - [setContainer, ["@service_container"]]

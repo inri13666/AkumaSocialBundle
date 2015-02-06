@@ -1,0 +1,35 @@
+parameters:
+    akuma_social.abstract.api.class: Akuma\Bundle\SocialBundle\Api\AbstractApi
+    akuma_social.abstract.auth.class: Akuma\Bundle\SocialBundle\Security\Authentication\Provider\AbstractAuthenticationProvider
+    akuma_social.abstract.security.authentication.listener.class: Akuma\Bundle\SocialBundle\Security\Firewall\AbstractAuthenticationListener
+    akuma_social.abstract.security.authentication.entry_point.class: Akuma\Bundle\UserBundle\Security\Authentication\EntryPoint\AbstractEntryPoint
+    
+services:
+    akuma_social.abstract.api:
+        public: false
+        abstract: true
+        class: %akuma_social.abstract.api.class%
+        calls:
+            - [setContainer, ["@service_container"]]
+            - [setUp, []]
+
+    akuma_social.abstract.auth:
+        public: false
+        abstract: true
+        class: %akuma_social.abstract.auth.class%
+        calls:
+            - [setContainer, ["@service_container"]]
+            - [setLogger, ["@logger"]]
+
+    akuma_social.abstract.security.authentication.listener:
+        public: false
+        abstract: true
+        parent: security.authentication.listener.abstract
+        class: %akuma_social.abstract.security.authentication.listener.class%
+        calls:
+            - [setContainer, ["@service_container"]]
+
+    akuma_social.abstract.security.authentication.entry_point:
+        public: false
+        abstract: true
+        class: %akuma_social.abstract.security.authentication.entry_point.class%
