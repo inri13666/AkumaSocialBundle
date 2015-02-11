@@ -12,6 +12,7 @@ namespace Akuma\Bundle\SocialBundle\Api;
 use Akuma\Bundle\SocialBundle\Exception\ApiException;
 use Akuma\Bundle\SocialBundle\Model\SocialUserModel;
 use Facebook\FacebookCanvasLoginHelper;
+use Facebook\FacebookJavaScriptLoginHelper;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookSDKException;
@@ -20,18 +21,6 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class FacebookApi extends AbstractApi
 {
-    protected $scopes = array();
-
-    public function setAppScopes(array $scopes = null)
-    {
-        $this->scopes = $scopes;
-    }
-
-    public function getAppScopes()
-    {
-        return $this->scopes;
-    }
-
     public function getLoginHelperClass()
     {
         return $this->container->getParameter('akuma_social.facebook.loginhelper.class');
@@ -91,7 +80,13 @@ class FacebookApi extends AbstractApi
 
     public function getLoginUrl()
     {
-        return $this->getLoginUrlHelper()->getLoginUrl($this->getAppScopes());
+        $helper = $this->getLoginUrlHelper();
+        switch(true){
+            case($helper instanceof FacebookRedirectLoginHelper):
+                return $helper->getLoginUrl($this->getAppScopes());
+            break;
+        }
+        return "#";
     }
 
     public function getLoginUrlHelper()
@@ -111,7 +106,7 @@ class FacebookApi extends AbstractApi
                 );
                 break;
             case(('Facebook\FacebookJavaScriptLoginHelper' === $this->getLoginHelperClass()) || in_array('Facebook\FacebookJavaScriptLoginHelper', class_implements($this->getLoginHelperClass()))):
-                return new FacebookCanvasLoginHelper(
+                return new FacebookJavaScriptLoginHelper(
                     $this->getAppId(),
                     $this->getAppSecret()
                 );

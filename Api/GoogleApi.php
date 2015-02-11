@@ -10,13 +10,17 @@ namespace Akuma\Bundle\SocialBundle\Api;
 
 
 use Akuma\Bundle\SocialBundle\Exception\ApiException;
+use Akuma\Bundle\SocialBundle\Model\SocialUserModel;
 
 class GoogleApi extends AbstractApi
 {
 
+
     public function setUp()
     {
-        // TODO: Implement init() method.
+        $this->setAppId($this->container->getParameter('akuma_social.facebook.app_id'));
+        $this->setAppSecret($this->container->getParameter('akuma_social.facebook.app_secret'));
+        $this->setAppScopes($this->container->getParameterBag()->get('akuma_social.facebook.app_scopes'));
     }
 
     /**
@@ -26,14 +30,19 @@ class GoogleApi extends AbstractApi
      *
      * @throws ApiException
      */
-    public function validateSocialToken($socialToken)
+    public function validateToken($socialToken)
     {
-        // TODO: Implement validateSocialToken() method.
+        // TODO: Implement validateToken() method.
     }
 
-    public function getUserSocialId($socialToken)
+    /**
+     * @param $socialToken
+     *
+     * @return SocialUserModel
+     */
+    public function getUserObject($socialToken)
     {
-        // TODO: Implement getUserSocialId() method.
+        // TODO: Implement getUserObject() method.
     }
 
     public function getLoginUrl()

@@ -32,6 +32,8 @@ abstract class AbstractApi implements ContainerAwareInterface
      */
     protected $appSecret;
 
+    protected $scopes = array();
+
     /**
      * Sets the Container.
      *
@@ -63,6 +65,16 @@ abstract class AbstractApi implements ContainerAwareInterface
     protected function setAppSecret($_)
     {
         $this->appSecret = $_;
+    }
+
+    public function setAppScopes(array $scopes = null)
+    {
+        $this->scopes = $scopes;
+    }
+
+    public function getAppScopes()
+    {
+        return $this->scopes;
     }
 
     abstract public function setUp();
