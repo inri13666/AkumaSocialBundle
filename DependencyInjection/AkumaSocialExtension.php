@@ -16,11 +16,25 @@ class AkumaSocialExtension extends Extension
 {
     protected function createConfigEntries(array $config, ContainerBuilder $container, $parent = null)
     {
+        $isScalar = true;
         foreach ($config as $key => $value) {
-            if (is_array($value)) {
-                $this->createConfigEntries($value, $container, $parent ? $parent . '.' . $key : $key);
-            } else {
-                $container->setParameter($parent ? $parent . '.' . $key : $key, $value);
+            if (!is_numeric($key)) {
+                $isScalar = false;
+                break;
+            }
+        }
+        if ($isScalar) {
+            if (!is_null($parent)) {
+                $container->setParameter($parent, $config);
+            }
+        } else {
+            foreach ($config as $key => $value) {
+                if (is_array($value)) {
+                    $keys = array_keys($value);
+                    $this->createConfigEntries($value, $container, $parent ? $parent . '.' . $key : $key);
+                } else {
+                    $container->setParameter($parent ? $parent . '.' . $key : $key, $value);
+                }
             }
         }
     }

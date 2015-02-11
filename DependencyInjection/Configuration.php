@@ -32,15 +32,24 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addFacebookSection(ArrayNodeDefinition $rootNode){
+    private function addFacebookSection(ArrayNodeDefinition $rootNode)
+    {
         /** @var ArrayNodeDefinition $facebook */
         $facebook = $rootNode->children()->arrayNode('facebook')->cannotBeOverwritten();
         $facebook->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
         $facebook->children()->scalarNode('app_secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        /** @var ArrayNodeDefinition $scopes */
+        $scopes = $facebook->children()->arrayNode('app_scopes');
+        $scopes->cannotBeEmpty()->cannotBeOverwritten();
+        $scopes->prototype('scalar')->end();
+        $scopes->defaultValue(array(
+            'email',
+        ))->end();
         $facebook->end();
     }
 
-    private function addGoogleSection(ArrayNodeDefinition $rootNode){
+    private function addGoogleSection(ArrayNodeDefinition $rootNode)
+    {
         /** @var ArrayNodeDefinition $google */
         $google = $rootNode->children()->arrayNode('google')->cannotBeOverwritten();
         $google->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();

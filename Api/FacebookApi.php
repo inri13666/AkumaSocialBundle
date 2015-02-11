@@ -19,10 +19,23 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class FacebookApi extends AbstractApi
 {
+    protected $scopes = array();
+
+    public function setAppScopes(array $scopes = null)
+    {
+        $this->scopes = $scopes;
+    }
+
+    public function getAppScopes()
+    {
+        return $this->scopes;
+    }
+
     public function setUp()
     {
         $this->setAppId($this->container->getParameter('akuma_social.facebook.app_id'));
         $this->setAppSecret($this->container->getParameter('akuma_social.facebook.app_secret'));
+        $this->setAppScopes($this->container->getParameterBag()->get('akuma_social.facebook.app_scopes'));
         FacebookSession::setDefaultApplication($this->getAppId(), $this->getAppSecret());
     }
 
@@ -72,7 +85,7 @@ class FacebookApi extends AbstractApi
 
     public function getLoginUrl()
     {
-        return $this->getLoginUrlHelper()->getLoginUrl(array('email'));
+        return $this->getLoginUrlHelper()->getLoginUrl($this->getAppScopes());
     }
 
     public function getLoginUrlHelper()
