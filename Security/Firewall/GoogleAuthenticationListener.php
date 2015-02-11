@@ -9,6 +9,7 @@
 namespace Akuma\Bundle\SocialBundle\Security\Firewall;
 
 
+use Akuma\Bundle\SocialBundle\Api\GoogleApi;
 use Akuma\Bundle\SocialBundle\Security\Authentication\Token\GoogleToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,43 +30,36 @@ class GoogleAuthenticationListener extends AbstractAuthenticationListener{
      */
     protected function attemptAuthentication(Request $request)
     {
-        throw new AuthenticationException("Please provide a complete set of credentials");
-
         $this->logger->debug('Trying to auth using Facebook Social Service');
-        // Get the acess_token from the request
-        $code = $request->get('code');
-//        // If an empty pcode, return null and the specified error
-//        if ($code == NULL) {
-//            $request->getSession()->set(SecurityContextInterface::AUTHENTICATION_ERROR,
-//                new AuthenticationException("Please provide a complete set of credentials"));
-//            return null;
-//        }
 
-        // Probably credentials are correct, time to check!
-        $this->logger->debug("AkumaUserFacebookLogin: $code");
+        /**
+         * TODO: Add support for clean Token
+         */
+        /** @var GoogleApi $api */
+        $api = $this->container->get('akuma_social.google.api');
 
-        // Create a Facebook Token
+        try {
+            $client = $api->getClient();
+            if(!$client->authenticate($request->get('code'))){
+                throw new \Exception('Not Valid Code Provided');
+            };
+        } catch (\Exception $e) {
+            throw new AuthenticationException($e->getMessage());
+        }
+
+        // Create a Social Token
         $token = new GoogleToken();
-        $token->setSocialToken($code);
+        $token->setSocialToken($client->getAccessToken());
         $token->setAuthenticated(false);
 
-        // Try to authenticate by retrieving an authenticated token from the manager, catch any authenticationexception
-        try {
-            $authToken = $this->authenticationManager->authenticate($token);
-            $this->logger->debug(sprintf("Facebook authentication succesfull. Token: %s", $authToken));
+        $authToken = $this->authenticationManager->authenticate($token);
+        $this->logger->debug(sprintf("Google authentication succesfull. Token: %s", $authToken));
 
-            // Set the default event_id in the session
-            //$request->getSession()->set('event_id', $this->???->getVal('default_event_id'));
+        // Set the default event_id in the session
+        //$request->getSession()->set('event_id', $this->???->getVal('default_event_id'));
 
-            // Return the authenticated token
-            return $authToken;
+        // Return the authenticated token
+        return $authToken;
 
-            // Something went wrong in the authentication process
-        } catch (AuthenticationException $failed) {
-            $this->logger->debug("Facebook Authentication failed.");
-            // Set the error in the session so the form can use it
-            $request->getSession()->set(SecurityContext::AUTHENTICATION_ERROR, $failed);
-            return null;
-        }
     }
 }

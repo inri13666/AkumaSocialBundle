@@ -20,6 +20,10 @@
     },
     "require-dev": {
     },
+    "suggest":      {
+        "google/apiclient": "Client library for Google APIs",
+        "facebook/php-sdk-v4": "Facebook SDK for PHP"
+    },
     "autoload": {
         "psr-0": { "Akuma\\Bundle\\SocialBundle": "" }
     },

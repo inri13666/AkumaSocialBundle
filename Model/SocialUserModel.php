@@ -16,6 +16,7 @@ class SocialUserModel
     protected $firstName;
     protected $lastName;
     protected $social;
+    protected $picture;
 
     public function getId()
     {
@@ -70,5 +71,16 @@ class SocialUserModel
     {
         $this->social = $_;
         return $this;
+    }
+
+    public function setPicture($_)
+    {
+        $this->picture = $_;
+        return $this;
+    }
+
+    public function getPicture()
+    {
+        return $this->picture;
     }
 }

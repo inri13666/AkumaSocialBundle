@@ -10,6 +10,7 @@ namespace Akuma\Bundle\SocialBundle\Security\Authentication\Provider;
 
 
 use Akuma\Bundle\SocialBundle\Api\AbstractApi;
+use Akuma\Bundle\SocialBundle\Api\FacebookApi;
 use Akuma\Bundle\SocialBundle\Exception\ApiException;
 use Akuma\Bundle\SocialBundle\Security\Authentication\Token\AbstractToken;
 use Akuma\Bundle\SocialBundle\Security\Authentication\Token\FacebookToken;
@@ -42,7 +43,7 @@ class FacebookAuthenticationProvider extends AbstractAuthenticationProvider
 
         $this->logger->debug("Facebook Provider Login: user load started");
 
-        /** @var AbstractApi $api */
+        /** @var FacebookApi $api */
         $api = $this->container->get('akuma_social.facebook.api');
 
         $socialToken = $token->getSocialToken();
@@ -62,6 +63,7 @@ class FacebookAuthenticationProvider extends AbstractAuthenticationProvider
                 $realUser->setEmail($socialUser->getEmail());
                 $realUser->setUsername(trim($socialUser->getFirstName() . ' ' . $socialUser->getLastName()));
                 $realUser->setPlainPassword('password');
+                $realUser->addRole('ROLE_FACEBOOK');
                 $userManager->updateUser($realUser);
             }
             /**
