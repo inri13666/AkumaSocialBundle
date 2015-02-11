@@ -11,6 +11,7 @@ namespace Akuma\Bundle\SocialBundle\Api;
 
 use Akuma\Bundle\SocialBundle\Exception\ApiException;
 use Akuma\Bundle\SocialBundle\Model\SocialUserModel;
+use Facebook\FacebookCanvasLoginHelper;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookSDKException;
@@ -29,6 +30,11 @@ class FacebookApi extends AbstractApi
     public function getAppScopes()
     {
         return $this->scopes;
+    }
+
+    public function getLoginHelperClass()
+    {
+        return $this->container->getParameter('akuma_social.facebook.loginhelper.class');
     }
 
     public function setUp()
@@ -90,12 +96,27 @@ class FacebookApi extends AbstractApi
 
     public function getLoginUrlHelper()
     {
-        //urlencode'http://darom.akuma.in/facebook/connect',
-        return new FacebookRedirectLoginHelper(
-            $this->container->get('router')->generate('akuma_social_facebook_connect', array(), Router::ABSOLUTE_URL),
-            $this->getAppId(),
-            $this->getAppSecret()
-        );
-
+        switch (true) {
+            case(('Facebook\FacebookRedirectLoginHelper' === $this->getLoginHelperClass()) || in_array('Facebook\FacebookRedirectLoginHelper', class_implements($this->getLoginHelperClass()))):
+                return new FacebookRedirectLoginHelper(
+                    $this->container->get('router')->generate('akuma_social_facebook_connect', array(), Router::ABSOLUTE_URL),
+                    $this->getAppId(),
+                    $this->getAppSecret()
+                );
+                break;
+            case(('Facebook\FacebookCanvasLoginHelper' === $this->getLoginHelperClass()) || in_array('Facebook\FacebookCanvasLoginHelper', class_implements($this->getLoginHelperClass()))):
+                return new FacebookCanvasLoginHelper(
+                    $this->getAppId(),
+                    $this->getAppSecret()
+                );
+                break;
+            case(('Facebook\FacebookJavaScriptLoginHelper' === $this->getLoginHelperClass()) || in_array('Facebook\FacebookJavaScriptLoginHelper', class_implements($this->getLoginHelperClass()))):
+                return new FacebookCanvasLoginHelper(
+                    $this->getAppId(),
+                    $this->getAppSecret()
+                );
+                break;
+        }
+        throw new ApiException('Unknown Facebook Login Helper ' . $this->getLoginHelperClass());
     }
 }

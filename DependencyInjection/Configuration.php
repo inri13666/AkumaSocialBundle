@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('akuma_social');
 
         /**
-         * Create Users If Not Exists
+         * Create Users If Not Exists Global
          */
         $rootNode->children()->booleanNode('auto_create')->defaultFalse()->end();
 
@@ -34,26 +34,35 @@ class Configuration implements ConfigurationInterface
 
     private function addFacebookSection(ArrayNodeDefinition $rootNode)
     {
-        /** @var ArrayNodeDefinition $facebook */
-        $facebook = $rootNode->children()->arrayNode('facebook')->cannotBeOverwritten();
-        $facebook->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
-        $facebook->children()->scalarNode('app_secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        /** @var ArrayNodeDefinition $social */
+        $social = $rootNode->children()->arrayNode('facebook')->cannotBeOverwritten();
+        $social->children()->booleanNode('auto_create')->cannotBeOverwritten()->defaultFalse()->end();
+        $social->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('app_secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
         /** @var ArrayNodeDefinition $scopes */
-        $scopes = $facebook->children()->arrayNode('app_scopes');
+        $scopes = $social->children()->arrayNode('app_scopes');
         $scopes->cannotBeEmpty()->cannotBeOverwritten();
         $scopes->prototype('scalar')->end();
         $scopes->defaultValue(array(
             'email',
         ))->end();
-        $facebook->end();
+        $social->end();
     }
 
     private function addGoogleSection(ArrayNodeDefinition $rootNode)
     {
-        /** @var ArrayNodeDefinition $google */
-        $google = $rootNode->children()->arrayNode('google')->cannotBeOverwritten();
-        $google->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
-        $google->children()->scalarNode('app_secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
-        $google->end();
+        /** @var ArrayNodeDefinition $social */
+        $social = $rootNode->children()->arrayNode('google')->cannotBeOverwritten();
+        $social->children()->booleanNode('auto_create')->cannotBeOverwritten()->defaultFalse()->end();
+        $social->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('app_secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        /** @var ArrayNodeDefinition $scopes */
+        $scopes = $social->children()->arrayNode('app_scopes');
+        $scopes->cannotBeEmpty()->cannotBeOverwritten();
+        $scopes->prototype('scalar')->end();
+        $scopes->defaultValue(array(
+            'email',
+        ))->end();
+        $social->end();
     }
 }
