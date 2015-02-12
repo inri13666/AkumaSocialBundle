@@ -16,13 +16,15 @@
         "php": ">=5.4",
         "symfony/symfony": "2.6.*",
         "friendsofsymfony/user-bundle": "~1.3",
-        "akuma/core-bundle": "dev-master"
+        "akuma/core-bundle": "dev-master",
+        "league/oauth2-client": "0.8.*"
     },
     "require-dev": {
     },
     "suggest":      {
         "google/apiclient": "Client library for Google APIs",
-        "facebook/php-sdk-v4": "Facebook SDK for PHP"
+        "facebook/php-sdk-v4": "Facebook SDK for PHP",
+        "akuma/wll-php": "Microsoft Windows Live Login"
     },
     "autoload": {
         "psr-0": { "Akuma\\Bundle\\SocialBundle": "" }

@@ -11,9 +11,14 @@ namespace Akuma\Bundle\SocialBundle\Api;
 
 use Akuma\Bundle\SocialBundle\Exception\ApiException;
 use Akuma\Bundle\SocialBundle\Model\SocialUserModel;
+use Akuma\Bundle\SocialBundle\Security\Authentication\Token\AbstractToken;
+use League\OAuth2\Client\Entity\User;
+use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Router;
 
 abstract class AbstractApi implements ContainerAwareInterface
 {
@@ -23,16 +28,61 @@ abstract class AbstractApi implements ContainerAwareInterface
     protected $container;
 
     /**
-     * @var mixed
+     * @var  \League\OAuth2\Client\Provider\AbstractProvider
      */
-    protected $appId;
+    protected $provider;
+
+    protected function get($what)
+    {
+        return $this->container->get($what, Container::NULL_ON_INVALID_REFERENCE);
+    }
+
+    protected function getParameter($name, $default = null)
+    {
+        $params = $this->container->getParameterBag();
+        return $params->has($name) ? $params->get($name) : $default;
+    }
+
+    public function getProviderClass()
+    {
+        return $this->getParameter('akuma_social.' . strtolower($this->getName()) . '.oauth_provider.class');
+
+    }
+
+    public function getProviderTokenClass()
+    {
+        return $this->getParameter('akuma_social.' . strtolower($this->getName()) . '.oauth_provider.token.class');
+    }
+
+    public function getProviderToken(AccessToken $token)
+    {
+        $_class = $this->getProviderTokenClass();
+        /** @var AbstractToken $pToken */
+        $pToken = new $_class;
+        $pToken->setSocialToken($token);
+        $pToken->setAuthenticated(false);
+        return $pToken;
+    }
 
     /**
-     * @var mixed
+     * @return \League\OAuth2\Client\Provider\AbstractProvider
      */
-    protected $appSecret;
+    protected function getProviderInstance()
+    {
+        if (is_null($this->provider)) {
+            $_class = $this->getProviderClass();
 
-    protected $scopes = array();
+            $params = array(
+                'clientId' => $this->getParameter('akuma_social.' . strtolower($this->getName()) . '.id'),
+                'clientSecret' => $this->getParameter('akuma_social.' . strtolower($this->getName()) . '.secret'),
+                'redirectUri' => $this->getRedirectUrl(),
+            );
+
+            $this->provider = new $_class($params);
+            $this->provider->setScopes($this->getParameter('akuma_social.' . strtolower($this->getName()) . '.scopes', $this->provider->getScopes()));
+        }
+        return $this->provider;
+    }
 
     /**
      * Sets the Container.
@@ -46,54 +96,69 @@ abstract class AbstractApi implements ContainerAwareInterface
         $this->container = $container;
     }
 
-    public function getAppId()
+    /**
+     * @param array $options
+     *
+     * @return string
+     */
+    public function getLoginUrl(array $options = array())
     {
-        return $this->appId;
-
+        return $this->getProviderInstance()->getAuthorizationUrl($options);
     }
-
-    public function getAppSecret()
-    {
-        return $this->appSecret;
-    }
-
-    protected function setAppId($_)
-    {
-        $this->appId = $_;
-    }
-
-    protected function setAppSecret($_)
-    {
-        $this->appSecret = $_;
-    }
-
-    public function setAppScopes(array $scopes = null)
-    {
-        $this->scopes = $scopes;
-    }
-
-    public function getAppScopes()
-    {
-        return $this->scopes;
-    }
-
-    abstract public function setUp();
 
     /**
-     * @param string $socialToken
+     * @param AccessToken $token
      *
-     * @return bool
-     *
-     * @throws ApiException
+     * @return \League\OAuth2\Client\Entity\User
      */
-    abstract public function validateToken($socialToken);
+    public function getUserDetails(AccessToken $token)
+    {
+        return $this->getProviderInstance()->getUserDetails($token);
+    }
+
+    private function getRedirectUrl()
+    {
+        /** @var Router $router */
+        $router = $this->get('router');
+        $route = $this->getParameter('akuma_social.' . strtolower($this->getName()) . '.redirect_route');
+        if ($route) {
+            return $router->generate($this->getParameter('akuma_social.' . strtolower($this->getName()) . '.redirect_route'), array(), Router::ABSOLUTE_URL);
+        }
+        return null;
+    }
+
+//    /**
+//     * @param Request $request
+//     *
+//     * @return AccessToken
+//     */
+//    abstract public function getAccessToken(Request $request);
 
     /**
-     * @param $socialToken
+     * @param Request $request
      *
-     * @return SocialUserModel
+     * @return AccessToken
      */
-    abstract public function getUserObject($socialToken);
+    public function getAccessToken(Request $request)
+    {
+        return $this->getProviderInstance()->getAccessToken(
+            'authorization_code',
+            array(
+                'code' => $request->get('code')
+            )
+        );
+    }
 
-    abstract public function getLoginUrl();
+    /**
+     * @return string
+     */
+    abstract public function getName();
+
+    public function findUserByDetails(User $user)
+    {
+        /** @var UserManager $userManager */
+        $userManager = $this->container->get('fos_user.user_manager');
+        $realUser = $userManager->findUserBy(array('email' => $user->email));
+        return $realUser;
+    }
 }

@@ -7,3 +7,7 @@ akuma_social_google:
     resource: "@AkumaSocialBundle/Controller/GoogleController.php"
     type:     annotation
     prefix: /google
+akuma_social_microsoft:
+    resource: "@AkumaSocialBundle/Controller/MicrosoftController.php"
+    type:     annotation
+    prefix: /microsoft

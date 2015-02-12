@@ -56,7 +56,7 @@ class AkumaSocialExtension extends Extension
         $loader->load('services.yml');
         $loader->load('twig.yml');
 
-        $socials = array('facebook', 'google');
+        $socials = array('facebook', 'google', 'microsoft');
 
         foreach ($socials as $social) {
             if (isset($config[$social]) && (false != $config[$social])) {

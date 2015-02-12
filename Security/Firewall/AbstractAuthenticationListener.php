@@ -9,7 +9,9 @@
 namespace Akuma\Bundle\SocialBundle\Security\Firewall;
 
 
+use Akuma\Bundle\SocialBundle\Api\AbstractApi;
 use Akuma\Bundle\SocialBundle\Security\Authentication\Token\GoogleToken;
+use League\OAuth2\Client\Exception\IDPException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -53,5 +55,31 @@ abstract class AbstractAuthenticationListener extends AbstractAuthenticationList
     {
         $this->options = $options;
     }
+
+
+    /**
+     * Performs authentication.
+     *
+     * @param Request $request A Request instance
+     *
+     * @return TokenInterface|Response|null The authenticated token, null if full authentication is not possible, or a Response
+     *
+     * @throws AuthenticationException if the authentication fails
+     */
+    protected function attemptAuthentication(Request $request)
+    {
+        $this->logger->debug('Trying to auth using Microsoft Social Service');
+
+        /** @var AbstractApi $api */
+        $api = $this->container->get('akuma_social.' . strtolower($this->getName()) . '.api');
+        try {
+            $token = $api->getAccessToken($request);
+        } catch (IDPException $e) {
+            throw new AuthenticationException($e->getMessage());
+        }
+        return $this->authenticationManager->authenticate($api->getProviderToken($token));
+    }
+
+    abstract protected function getName();
 
 }

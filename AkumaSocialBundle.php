@@ -4,6 +4,7 @@ namespace Akuma\Bundle\SocialBundle;
 
 use Akuma\Bundle\SocialBundle\DependencyInjection\Security\Factory\FacebookFactory;
 use Akuma\Bundle\SocialBundle\DependencyInjection\Security\Factory\GoogleFactory;
+use Akuma\Bundle\SocialBundle\DependencyInjection\Security\Factory\MicrosoftFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -18,5 +19,6 @@ class AkumaSocialBundle extends Bundle
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new FacebookFactory());
         $extension->addSecurityListenerFactory(new GoogleFactory());
+        $extension->addSecurityListenerFactory(new MicrosoftFactory());
     }
 }

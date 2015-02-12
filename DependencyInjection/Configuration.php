@@ -18,6 +18,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
+
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('akuma_social');
 
@@ -28,19 +29,22 @@ class Configuration implements ConfigurationInterface
 
         $this->addFacebookSection($rootNode);
         $this->addGoogleSection($rootNode);
+        $this->addMicrosoftSection($rootNode);
 
         return $treeBuilder;
     }
 
     private function addFacebookSection(ArrayNodeDefinition $rootNode)
     {
+        $name = 'facebook';
         /** @var ArrayNodeDefinition $social */
-        $social = $rootNode->children()->arrayNode('facebook')->cannotBeOverwritten();
+        $social = $rootNode->children()->arrayNode($name)->cannotBeOverwritten();
         $social->children()->booleanNode('auto_create')->cannotBeOverwritten()->defaultFalse()->end();
-        $social->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
-        $social->children()->scalarNode('app_secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('redirect_route')->cannotBeEmpty()->cannotBeOverwritten()->defaultValue('akuma_social_'. $name . '_connect')->end();
         /** @var ArrayNodeDefinition $scopes */
-        $scopes = $social->children()->arrayNode('app_scopes');
+        $scopes = $social->children()->arrayNode('scopes');
         $scopes->cannotBeEmpty()->cannotBeOverwritten();
         $scopes->prototype('scalar')->end();
         $scopes->defaultValue(array(
@@ -51,18 +55,37 @@ class Configuration implements ConfigurationInterface
 
     private function addGoogleSection(ArrayNodeDefinition $rootNode)
     {
+        $name = 'google';
         /** @var ArrayNodeDefinition $social */
-        $social = $rootNode->children()->arrayNode('google')->cannotBeOverwritten();
+        $social = $rootNode->children()->arrayNode($name)->cannotBeOverwritten();
         $social->children()->booleanNode('auto_create')->cannotBeOverwritten()->defaultFalse()->end();
-        $social->children()->scalarNode('app_id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
-        $social->children()->scalarNode('app_secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('redirect_route')->cannotBeEmpty()->cannotBeOverwritten()->defaultValue('akuma_social_'. $name . '_connect')->end();
         /** @var ArrayNodeDefinition $scopes */
-        $scopes = $social->children()->arrayNode('app_scopes');
+        $scopes = $social->children()->arrayNode('scopes');
         $scopes->cannotBeEmpty()->cannotBeOverwritten();
         $scopes->prototype('scalar')->end();
         $scopes->defaultValue(array(
             'email',
         ))->end();
+        $social->end();
+    }
+
+    private function addMicrosoftSection(ArrayNodeDefinition $rootNode)
+    {
+        $name = 'microsoft';
+        /** @var ArrayNodeDefinition $social */
+        $social = $rootNode->children()->arrayNode($name)->cannotBeOverwritten();
+        $social->children()->booleanNode('auto_create')->cannotBeOverwritten()->defaultFalse()->end();
+        $social->children()->scalarNode('id')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('secret')->isRequired()->cannotBeEmpty()->cannotBeOverwritten()->end();
+        $social->children()->scalarNode('redirect_route')->cannotBeEmpty()->cannotBeOverwritten()->defaultValue('akuma_social_'. $name . '_connect')->end();
+        /** @var ArrayNodeDefinition $scopes */
+        $scopes = $social->children()->arrayNode('scopes');
+        $scopes->cannotBeEmpty()->cannotBeOverwritten();
+        $scopes->prototype('scalar')->end();
+        $scopes->defaultValue(['wl.basic', 'wl.emails'])->end();
         $social->end();
     }
 }

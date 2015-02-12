@@ -4,6 +4,8 @@ services:
 #        arguments: [@service_id, "plain_value", %parameter%]
 
 parameters:
+    akuma_social.google.oauth_provider.class: \League\OAuth2\Client\Provider\Google
+    akuma_social.google.oauth_provider.token.class: Akuma\Bundle\SocialBundle\Security\Authentication\Token\GoogleToken
     akuma_social.google.api.class: Akuma\Bundle\SocialBundle\Api\GoogleApi
     akuma_social.google.auth.class: Akuma\Bundle\SocialBundle\Security\Authentication\Provider\GoogleAuthenticationProvider
     akuma_social.google.security.authentication.listener.class: Akuma\Bundle\SocialBundle\Security\Firewall\GoogleAuthenticationListener
@@ -24,9 +26,3 @@ services:
         abstract: true
         parent: akuma_social.abstract.security.authentication.listener
         class: %akuma_social.google.security.authentication.listener.class%
-
-    akuma_social.google.security.authentication.entry_point:
-        public: false
-        abstract: true
-        parent: akuma_social.abstract.security.authentication.entry_point
-        class: %akuma_social.google.security.authentication.entry_point.class%

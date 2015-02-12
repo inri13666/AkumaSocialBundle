@@ -6,7 +6,10 @@
 #Google+
     https://developers.google.com/+/quickstart/php
     https://developers.google.com/api-client-library/php/guide/aaa_overview
-
+#Microsoft Live
+    https://msdn.microsoft.com/en-us/library/bb676633.aspx
+    https://account.live.com/developers/applications/index
+    http://www.microsoft.com/en-us/download/details.aspx?id=7843 <== SDK HERE
 
 #parameters.yml.dist:
     parameters:

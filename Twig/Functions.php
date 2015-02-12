@@ -54,8 +54,11 @@ class Functions extends \Twig_Extension implements ContainerAwareInterface
     public function getSocialLoginUrl($social)
     {
         /** @var FacebookApi $api */
-        $api = $this->container->get('akuma_social.' . $social . '.api');
+        $api = $this->container->get('akuma_social.' . $social . '.api', Container::NULL_ON_INVALID_REFERENCE);
 
-        return $api->getLoginUrl();
+        if (!is_null($api)) {
+            return $api->getLoginUrl();
+        }
+        return '#';
     }
 }

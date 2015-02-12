@@ -5,13 +5,15 @@ parameters:
     akuma_social.abstract.security.authentication.entry_point.class: Akuma\Bundle\UserBundle\Security\Authentication\EntryPoint\AbstractEntryPoint
     
 services:
+#    akuma_social.user_manager:
+#        parent: %fos_user.user_manager%
+
     akuma_social.abstract.api:
         public: false
         abstract: true
         class: %akuma_social.abstract.api.class%
         calls:
             - [setContainer, ["@service_container"]]
-            - [setUp, []]
 
     akuma_social.abstract.auth:
         public: false

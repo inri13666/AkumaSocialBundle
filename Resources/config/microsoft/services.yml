@@ -1,0 +1,28 @@
+services:
+#    akuma_social.microsoft.example:
+#        class: Akuma\Bundle\SocialBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+parameters:
+    akuma_social.microsoft.oauth_provider.class: \League\OAuth2\Client\Provider\Microsoft
+    akuma_social.microsoft.oauth_provider.token.class: Akuma\Bundle\SocialBundle\Security\Authentication\Token\MicrosoftToken
+    akuma_social.microsoft.api.class: Akuma\Bundle\SocialBundle\Api\MicrosoftApi
+    akuma_social.microsoft.auth.class: Akuma\Bundle\SocialBundle\Security\Authentication\Provider\MicrosoftAuthenticationProvider
+    akuma_social.microsoft.security.authentication.listener.class: Akuma\Bundle\SocialBundle\Security\Firewall\MicrosoftAuthenticationListener
+    akuma_social.microsoft.security.authentication.entry_point.class: Akuma\Bundle\UserBundle\Security\Authentication\EntryPoint\MicrosoftEntryPoint
+
+services:
+    akuma_social.microsoft.api:
+        public: true
+        parent: akuma_social.abstract.api
+        class: %akuma_social.microsoft.api.class%
+
+    akuma_social.microsoft.auth:
+        public: false
+        parent: akuma_social.abstract.auth
+        class: %akuma_social.microsoft.auth.class%
+
+    akuma_social.microsoft.security.authentication.listener:
+        abstract: true
+        parent: akuma_social.abstract.security.authentication.listener
+        class: %akuma_social.microsoft.security.authentication.listener.class%
