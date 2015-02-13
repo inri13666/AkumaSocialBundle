@@ -1,15 +1,21 @@
 # AkumaSocialBundle
 
-#Facebook
-    https://developers.facebook.com/docs/reference/php/4.0.0
+Facebook:
+https://developers.facebook.com/quickstarts/?platform=web
+App Settings Set Email
+App review-status Go Live
 
-#Google+
-    https://developers.google.com/+/quickstart/php
-    https://developers.google.com/api-client-library/php/guide/aaa_overview
-#Microsoft Live
-    https://msdn.microsoft.com/en-us/library/bb676633.aspx
-    https://account.live.com/developers/applications/index
-    http://www.microsoft.com/en-us/download/details.aspx?id=7843 <== SDK HERE
+Google:
+https://console.developers.google.com/project
+Configure "permissions" if needed
+Enabled "Google+ API"
+Create new credentials "Web Application" type
+
+Microsoft:
+https://account.live.com/developers/applications/create?tou=1
+Configure "API Settings" set to "Yes" => "Mobile or desktop client app" 
+Configure redirect urls by default application generates urls like http(s)://YOUR_DOMAIN/[SOCIAL_NAME]/connect, example : http://demo.akuma.in/microsoft/connect
+
 
 #parameters.yml.dist:
     parameters:

@@ -21,11 +21,6 @@
     },
     "require-dev": {
     },
-    "suggest":      {
-        "google/apiclient": "Client library for Google APIs",
-        "facebook/php-sdk-v4": "Facebook SDK for PHP",
-        "akuma/wll-php": "Microsoft Windows Live Login"
-    },
     "autoload": {
         "psr-0": { "Akuma\\Bundle\\SocialBundle": "" }
     },
