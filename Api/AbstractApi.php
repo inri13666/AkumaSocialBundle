@@ -12,6 +12,7 @@ namespace Akuma\Bundle\SocialBundle\Api;
 use Akuma\Bundle\SocialBundle\Exception\ApiException;
 use Akuma\Bundle\SocialBundle\Model\SocialUserModel;
 use Akuma\Bundle\SocialBundle\Security\Authentication\Token\AbstractToken;
+use FOS\UserBundle\Model\UserManager;
 use League\OAuth2\Client\Entity\User;
 use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\DependencyInjection\Container;
@@ -154,11 +155,23 @@ abstract class AbstractApi implements ContainerAwareInterface
      */
     abstract public function getName();
 
+    /**
+     * @param User $user
+     *
+     * @return \League\OAuth2\Client\Entity\User
+     */
     public function findUserByDetails(User $user)
     {
         /** @var UserManager $userManager */
         $userManager = $this->container->get('fos_user.user_manager');
         $realUser = $userManager->findUserBy(array('email' => $user->email));
+        if (!$realUser && ($this->getParameter('akuma_social.auto_create', false))) {
+            $realUser = $userManager->createUser();
+            $realUser->setEmail($user->email);
+            $realUser->setUsername($user->nickname ? : (($user->firstName . ' ' . $user->lastName) ? trim($user->firstName . ' ' . $user->lastName) : $user->email));
+            $realUser->setPassword(uniqid());
+            $userManager->updateUser($realUser);
+        }
         return $realUser;
     }
 }
