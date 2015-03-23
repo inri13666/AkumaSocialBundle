@@ -24,5 +24,10 @@
     "autoload": {
         "psr-0": { "Akuma\\Bundle\\SocialBundle": "" }
     },
-    "target-dir": "Akuma/Bundle/SocialBundle"
+    "target-dir": "Akuma/Bundle/SocialBundle",
+	"extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }	
+	
 }
