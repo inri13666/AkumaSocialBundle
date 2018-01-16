@@ -1,13 +1,6 @@
 <?php
-/**
- * User  : Nikita.Makarov
- * Date  : 12/3/14
- * Time  : 7:55 AM
- * E-Mail: nikita.makarov@effective-soft.com
- */
 
 namespace Akuma\Bundle\SocialBundle\Twig;
-
 
 use Akuma\Bundle\SocialBundle\Api\AbstractApi;
 use Akuma\Bundle\SocialBundle\Api\FacebookApi;
@@ -27,7 +20,12 @@ class Functions extends \Twig_Extension implements ContainerAwareInterface
      */
     public function getFunctions()
     {
-        return array('social_login_url' => new \Twig_Function_Method($this, 'getSocialLoginUrl', array('is_safe' => array('html'))),
+        return array(
+            'social_login_url' => new \Twig_Function_Method(
+                $this,
+                'getSocialLoginUrl',
+                array('is_safe' => array('html'))
+            ),
         );
     }
 
@@ -51,6 +49,11 @@ class Functions extends \Twig_Extension implements ContainerAwareInterface
         $this->container = $container;
     }
 
+    /**
+     * @param $social
+     *
+     * @return string
+     */
     public function getSocialLoginUrl($social)
     {
         /** @var FacebookApi $api */
@@ -59,6 +62,7 @@ class Functions extends \Twig_Extension implements ContainerAwareInterface
         if (!is_null($api)) {
             return $api->getLoginUrl();
         }
+
         return '#';
     }
 }

@@ -1,35 +1,36 @@
 {
-    "name"             : "akuma/social-bundle",
-    "type"             : "symfony-bundle",
-    "description"      : "Akuma Social Bundle",
-    "keywords"         : ["User Management"],
-    "homepage"         : "",
-    "license"          : "MIT",
-    "authors"          : [
-        {
-            "name" : "Nikita Makarov",
-            "email": "mesaverde228@gmail.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require"          : {
-        "php"                         : ">=5.4",
-        "symfony/symfony"             : "2.6.*",
-        "friendsofsymfony/user-bundle": "~1.3",
-        "akuma/core-bundle"           : "dev-master",
-        "league/oauth2-client"        : "0.8.*"
-    },
-    "require-dev"      : {
-    },
-    "autoload"         : {
-        "psr-0": {
-            "Akuma\\Bundle\\SocialBundle": ""
-        }
-    },
-    "target-dir"       : "Akuma/Bundle/SocialBundle",
-    "extra"            : {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
+  "name": "akuma/social-bundle",
+  "type": "symfony-bundle",
+  "description": "Akuma Social Bundle",
+  "keywords": [
+    "User Management"
+  ],
+  "license": "WTFPL",
+  "authors": [
+    {
+      "name": "Nikita Makarov",
+      "email": "mesaverde228@gmail.com"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.4",
+    "symfony/symfony": "2.6.*",
+    "friendsofsymfony/user-bundle": "~1.3",
+    "akuma/core-bundle": "dev-master",
+    "league/oauth2-client": "0.8.*"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-0": {
+      "Akuma\\Bundle\\SocialBundle": ""
+    }
+  },
+  "target-dir": "Akuma/Bundle/SocialBundle",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
 }

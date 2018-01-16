@@ -1,10 +1,4 @@
 <?php
-/**
- * User  : Nikita.Makarov
- * Date  : 2/12/15
- * Time  : 10:15 AM
- * E-Mail: nikita.makarov@effective-soft.com
- */
 
 namespace Akuma\Bundle\SocialBundle\DependencyInjection\Security\Factory;
 
@@ -49,6 +43,7 @@ abstract class AbstractFactory extends ParentAbstractFactory
                 ->addArgument(new Reference('security.user_checker'))
                 ->addArgument($config['create_user_if_not_exists']);
         }
+
         return $authProviderId;
     }
 

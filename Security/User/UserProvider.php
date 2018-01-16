@@ -1,21 +1,14 @@
 <?php
-/**
- * User  : Nikita.Makarov
- * Date  : 2/6/15
- * Time  : 8:09 AM
- * E-Mail: nikita.makarov@effective-soft.com
- */
 
 namespace Akuma\Bundle\SocialBundle\Security\User;
-
 
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface{
-
+class UserProvider implements UserProviderInterface
+{
     /**
      * Loads the user for the given username.
      *

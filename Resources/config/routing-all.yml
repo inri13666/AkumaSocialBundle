@@ -1,13 +1,14 @@
 akuma_social_facebook:
     resource: "@AkumaSocialBundle/Controller/FacebookController.php"
-    type:     annotation
+    type: annotation
     prefix: /facebook
 
 akuma_social_google:
     resource: "@AkumaSocialBundle/Controller/GoogleController.php"
-    type:     annotation
+    type: annotation
     prefix: /google
+
 akuma_social_microsoft:
     resource: "@AkumaSocialBundle/Controller/MicrosoftController.php"
-    type:     annotation
+    type: annotation
     prefix: /microsoft

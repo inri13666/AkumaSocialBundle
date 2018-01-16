@@ -1,34 +1,35 @@
 # AkumaSocialBundle
 
-Facebook:
-https://developers.facebook.com/quickstarts/?platform=web
-App Settings Set Email
-App review-status Go Live
+### Facebook:
+- https://developers.facebook.com/quickstarts/?platform=web
+- App Settings Set Email
+- App review-status Go Live
 
-Google:
-https://console.developers.google.com/project
-Configure "permissions" if needed
-Enabled "Google+ API"
-Create new credentials "Web Application" type
+### Google:
+- https://console.developers.google.com/project
+- Configure "permissions" if needed
+- Enabled "Google+ API"
+- Create new credentials "Web Application" type
 
-Microsoft:
-https://account.live.com/developers/applications/create?tou=1
-Configure "API Settings" set to "Yes" => "Mobile or desktop client app" 
-Configure redirect urls by default application generates urls like http(s)://YOUR_DOMAIN/[SOCIAL_NAME]/connect, example : http://demo.akuma.in/microsoft/connect
+### Microsoft:
+- https://account.live.com/developers/applications/create?tou=1
+- Configure "API Settings" set to "Yes" => "Mobile or desktop client app" 
+- Configure redirect urls by default application generates urls like http(s)://YOUR_DOMAIN/[SOCIAL_NAME]/connect, example : http://demo.akuma.in/microsoft/connect
 
-
+```yml
 #parameters.yml.dist:
-    parameters:
-        #Akuma Social Params
-        #Facebook
-        facebook_id: ''
-        facebook_secret: ''
-        facebook_scopes: [email, public_profile]
-        #Google
-        google_id: ''
-        google_secret: ''
-        google_scopes: [email]
-
+parameters:
+    #Akuma Social Params
+    #Facebook
+    facebook_id: ''
+    facebook_secret: ''
+    facebook_scopes: [email, public_profile]
+    #Google
+    google_id: ''
+    google_secret: ''
+    google_scopes: [email]
+```
+```yml
 #config.yml:
     akuma_social:
         facebook:
@@ -39,12 +40,14 @@ Configure redirect urls by default application generates urls like http(s)://YOU
             app_id: %google_id%
             app_secret: %google_secret%
             app_scopes: %google_scopes%
-
+```
+```yml
 #routing.yml:
     akuma_social:
         resource: "@AkumaSocialBundle/Resources/config/routing-all.yml"
         prefix:   /
-
+```
+```yml
 #security.yml:
     security:
         encoders:
@@ -107,4 +110,4 @@ Configure redirect urls by default application generates urls like http(s)://YOU
         access_control:
             - { path: ^/user/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
     #        - { path: ^/secured, role: ROLE_USER }
-
+```

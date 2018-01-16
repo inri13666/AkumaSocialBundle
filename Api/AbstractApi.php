@@ -1,13 +1,6 @@
 <?php
-/**
- * User  : Nikita.Makarov
- * Date  : 2/5/15
- * Time  : 9:55 AM
- * E-Mail: nikita.makarov@effective-soft.com
- */
 
 namespace Akuma\Bundle\SocialBundle\Api;
-
 
 use Akuma\Bundle\SocialBundle\Exception\ApiException;
 use Akuma\Bundle\SocialBundle\Model\SocialUserModel;
@@ -41,13 +34,13 @@ abstract class AbstractApi implements ContainerAwareInterface
     protected function getParameter($name, $default = null)
     {
         $params = $this->container->getParameterBag();
+
         return $params->has($name) ? $params->get($name) : $default;
     }
 
     public function getProviderClass()
     {
         return $this->getParameter('akuma_social.' . strtolower($this->getName()) . '.oauth_provider.class');
-
     }
 
     public function getProviderTokenClass()
@@ -62,6 +55,7 @@ abstract class AbstractApi implements ContainerAwareInterface
         $pToken = new $_class;
         $pToken->setSocialToken($token);
         $pToken->setAuthenticated(false);
+
         return $pToken;
     }
 
@@ -80,8 +74,14 @@ abstract class AbstractApi implements ContainerAwareInterface
             );
 
             $this->provider = new $_class($params);
-            $this->provider->setScopes($this->getParameter('akuma_social.' . strtolower($this->getName()) . '.scopes', $this->provider->getScopes()));
+            $this->provider->setScopes(
+                $this->getParameter(
+                    'akuma_social.' . strtolower($this->getName()) . '.scopes',
+                    $this->provider->getScopes()
+                )
+            );
         }
+
         return $this->provider;
     }
 
@@ -123,17 +123,17 @@ abstract class AbstractApi implements ContainerAwareInterface
         $router = $this->get('router');
         $route = $this->getParameter('akuma_social.' . strtolower($this->getName()) . '.redirect_route');
         if ($route) {
-            return $router->generate($this->getParameter('akuma_social.' . strtolower($this->getName()) . '.redirect_route'), array(), Router::ABSOLUTE_URL);
+            return $router->generate(
+                $this->getParameter(
+                    'akuma_social.' . strtolower($this->getName()) . '.redirect_route'
+                ),
+                array(),
+                Router::ABSOLUTE_URL
+            );
         }
+
         return null;
     }
-
-//    /**
-//     * @param Request $request
-//     *
-//     * @return AccessToken
-//     */
-//    abstract public function getAccessToken(Request $request);
 
     /**
      * @param Request $request
@@ -145,7 +145,7 @@ abstract class AbstractApi implements ContainerAwareInterface
         return $this->getProviderInstance()->getAccessToken(
             'authorization_code',
             array(
-                'code' => $request->get('code')
+                'code' => $request->get('code'),
             )
         );
     }
@@ -168,10 +168,11 @@ abstract class AbstractApi implements ContainerAwareInterface
         if (!$realUser && ($this->getParameter('akuma_social.auto_create', false))) {
             $realUser = $userManager->createUser();
             $realUser->setEmail($user->email);
-            $realUser->setUsername($user->nickname ? : (($user->firstName . ' ' . $user->lastName) ? trim($user->firstName . ' ' . $user->lastName) : $user->email));
+            $realUser->setUsername($user->nickname ?: (($user->firstName . ' ' . $user->lastName) ? trim($user->firstName . ' ' . $user->lastName) : $user->email));
             $realUser->setPassword(uniqid());
             $userManager->updateUser($realUser);
         }
+
         return $realUser;
     }
 }

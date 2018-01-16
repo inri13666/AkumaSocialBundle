@@ -5,9 +5,6 @@ parameters:
     akuma_social.abstract.security.authentication.entry_point.class: Akuma\Bundle\UserBundle\Security\Authentication\EntryPoint\AbstractEntryPoint
     
 services:
-#    akuma_social.user_manager:
-#        parent: %fos_user.user_manager%
-
     akuma_social.abstract.api:
         public: false
         abstract: true

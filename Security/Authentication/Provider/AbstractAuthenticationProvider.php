@@ -1,13 +1,6 @@
 <?php
-/**
- * User  : Nikita.Makarov
- * Date  : 2/5/15
- * Time  : 10:13 AM
- * E-Mail: nikita.makarov@effective-soft.com
- */
 
 namespace Akuma\Bundle\SocialBundle\Security\Authentication\Provider;
-
 
 use Akuma\Bundle\SocialBundle\Api\AbstractApi;
 use Akuma\Bundle\SocialBundle\Security\Authentication\Token\AbstractToken;
@@ -21,7 +14,10 @@ use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProvid
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-abstract class AbstractAuthenticationProvider implements AuthenticationProviderInterface, ContainerAwareInterface, LoggerAwareInterface
+abstract class AbstractAuthenticationProvider implements
+    AuthenticationProviderInterface,
+    ContainerAwareInterface,
+    LoggerAwareInterface
 {
 
     /**
@@ -58,7 +54,6 @@ abstract class AbstractAuthenticationProvider implements AuthenticationProviderI
         $this->logger = $logger;
     }
 
-
     /**
      * Checks whether this provider supports the given token.
      *
@@ -71,9 +66,15 @@ abstract class AbstractAuthenticationProvider implements AuthenticationProviderI
         /** @var AbstractApi $api */
         $api = $this->container->get('akuma_social.' . strtolower($this->getName()) . '.api');
         $class = $api->getProviderTokenClass();
+
         return $token instanceof $class;
     }
 
+    /**
+     * @param TokenInterface $token
+     *
+     * @return AbstractToken
+     */
     public function authenticate(TokenInterface $token)
     {
         /** @var AbstractToken $token */
@@ -84,7 +85,6 @@ abstract class AbstractAuthenticationProvider implements AuthenticationProviderI
 
         /** @var AbstractApi $api */
         $api = $this->container->get('akuma_social.' . strtolower($this->getName()) . '.api');
-
 
         $userDetails = $api->getUserDetails($token->getSocialToken());
         if (!$userDetails) {
@@ -105,9 +105,13 @@ abstract class AbstractAuthenticationProvider implements AuthenticationProviderI
         $authenticatedToken->setAuthenticated(true);
         $authenticatedToken->setUser($realUser);
         $authenticatedToken->setSocialToken($token->getSocialToken());
+
         return $authenticatedToken;
     }
 
+    /**
+     * @return string
+     */
     abstract function getName();
 }
 

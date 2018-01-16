@@ -1,13 +1,6 @@
 <?php
-/**
- * User  : Nikita.Makarov
- * Date  : 2/5/15
- * Time  : 10:38 AM
- * E-Mail: nikita.makarov@effective-soft.com
- */
 
 namespace Akuma\Bundle\SocialBundle\Security\Firewall;
-
 
 use Akuma\Bundle\SocialBundle\Api\AbstractApi;
 use Akuma\Bundle\SocialBundle\Security\Authentication\Token\GoogleToken;
@@ -23,7 +16,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener as AbstractAuthenticationListenerParent;
 
-abstract class AbstractAuthenticationListener extends AbstractAuthenticationListenerParent implements ContainerAwareInterface
+abstract class AbstractAuthenticationListener extends AbstractAuthenticationListenerParent
+    implements ContainerAwareInterface
 {
 
     /**
@@ -40,8 +34,6 @@ abstract class AbstractAuthenticationListener extends AbstractAuthenticationList
      * Sets the Container.
      *
      * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -56,13 +48,13 @@ abstract class AbstractAuthenticationListener extends AbstractAuthenticationList
         $this->options = $options;
     }
 
-
     /**
      * Performs authentication.
      *
      * @param Request $request A Request instance
      *
-     * @return TokenInterface|Response|null The authenticated token, null if full authentication is not possible, or a Response
+     * @return TokenInterface|Response|null The authenticated token, null if full authentication is not possible, or a
+     *     Response
      *
      * @throws AuthenticationException if the authentication fails
      */
@@ -77,9 +69,12 @@ abstract class AbstractAuthenticationListener extends AbstractAuthenticationList
         } catch (IDPException $e) {
             throw new AuthenticationException($e->getMessage());
         }
+
         return $this->authenticationManager->authenticate($api->getProviderToken($token));
     }
 
+    /**
+     * @return string
+     */
     abstract protected function getName();
-
 }

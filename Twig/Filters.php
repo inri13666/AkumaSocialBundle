@@ -18,6 +18,9 @@ class Filters extends \Twig_Extension implements ContainerAwareInterface
      */
     protected $container;
 
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         return array(
@@ -26,16 +29,29 @@ class Filters extends \Twig_Extension implements ContainerAwareInterface
         );
     }
 
+    /**
+     * @param $data
+     *
+     * @return string
+     */
     public function preFilter($data)
     {
         return "<pre>" . print_r($data, true) . "</pre>";
     }
 
+    /**
+     * @param $array
+     *
+     * @return int
+     */
     public function countFilter($array)
     {
         return count($array);
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'akuma_social.twig.filters';
